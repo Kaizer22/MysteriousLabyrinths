@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
@@ -19,28 +20,28 @@ import sky.free.game.Gameplay.Player;
 
 public class GameplayScreen implements Screen,InputProcessor {
     int[][] levelmap = {
-            {2,1,3,3,0,0,0,0,0,0,0,0,0,0},
-            {0,1,2,2,3,0,1,0,0,0,0,0,0,0},
-            {0,0,1,0,0,0,2,0,0,0,0,0,0,0},
-            {0,0,1,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,1,2,3,0,0,0,0,0,0,0,0,0},
-            {0,0,1,2,3,0,0,0,0,0,0,0,0,0},
-            {0,0,1,2,3,0,0,0,0,0,0,0,0,0},
-            {0,0,1,2,3,0,0,0,0,0,0,0,0,0},
-            {0,0,1,2,3,0,0,0,0,0,0,0,0,0},
-            {0,0,1,2,3,0,0,0,0,0,0,0,0,0},
-            {0,0,1,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,1,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,1,0,0,0,2,0,0,0,0,0,0,0},
-            {0,0,1,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,1,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,1,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,1,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,1,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,1,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,1,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,1,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,1,0,0,0,0,0,0,0,0,0,0,0}
+            {2,1,3,3,1,1,1,1,1,1,1,1,1,1},
+            {1,1,2,2,3,0,1,0,0,0,0,0,0,1},
+            {1,0,1,0,0,0,2,0,0,0,0,0,0,1},
+            {1,0,1,0,0,0,0,0,0,0,0,0,0,1},
+            {1,0,1,2,3,0,0,0,0,0,0,0,0,1},
+            {1,0,1,2,3,0,0,0,0,0,0,0,0,1},
+            {1,0,1,2,3,0,0,0,0,0,0,0,0,1},
+            {1,0,1,2,3,0,0,0,0,0,0,0,0,1},
+            {1,0,1,2,3,0,0,0,0,0,0,0,0,1},
+            {1,0,1,2,3,0,0,0,0,0,0,0,0,1},
+            {1,0,1,0,0,0,0,0,0,0,0,0,0,1},
+            {1,0,1,0,0,0,0,0,0,0,0,0,0,1},
+            {1,0,1,0,0,0,2,0,0,0,0,0,0,1},
+            {1,0,1,0,0,0,0,0,0,0,0,0,0,1},
+            {1,0,1,0,0,0,0,0,0,0,0,0,0,1},
+            {1,0,1,0,0,0,0,0,0,0,0,0,0,1},
+            {1,0,1,0,0,0,0,0,0,0,0,0,0,1},
+            {1,0,1,0,0,0,0,0,0,0,0,0,0,1},
+            {1,0,1,0,0,0,0,0,0,0,0,0,0,1},
+            {1,0,1,0,0,0,0,0,0,0,0,0,0,1},
+            {1,0,1,0,0,0,0,0,0,0,0,0,0,1},
+            {1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 
     };
     LabyrinthGame gam;
@@ -55,6 +56,7 @@ public class GameplayScreen implements Screen,InputProcessor {
     boolean isPlayerDrawn;
 
     TextureManager txM;
+    Texture testcol;
 
     int scrH;
     int scrW;
@@ -77,6 +79,8 @@ public class GameplayScreen implements Screen,InputProcessor {
         camera = new OrthographicCamera();
 
         txM = new TextureManager();
+
+        testcol = new Texture("col.png");
 
 
 
@@ -109,6 +113,8 @@ public class GameplayScreen implements Screen,InputProcessor {
         gam.batchUI.end();
         //_______________________________________
 
+        checkCollisions();
+
         if (Gdx.input.isTouched()){
             if (downButton.checkZone.contains(Gdx.input.getX(),scrH-Gdx.input.getY()))
                 downButton.makeAction();
@@ -119,6 +125,8 @@ public class GameplayScreen implements Screen,InputProcessor {
             if (rightButton.checkZone.contains(Gdx.input.getX(),scrH-Gdx.input.getY()))
                 rightButton.makeAction();
         }
+
+        player.updateState();
     }
 
     @Override
@@ -164,8 +172,10 @@ public class GameplayScreen implements Screen,InputProcessor {
             @Override
             public void makeAction() {
                 super.makeAction();
-                camera.position.y+=10;
-                player.collisionModel.y+=10;
+                if (player.isCanGoUP) {
+                    camera.position.y += 10;
+                    player.setDeltaY(10);
+                }
                 if (player.direction != Player.CurrentDirection.UP){
                     player.direction = Player.CurrentDirection.UP;
                     //currentTexture = ***;
@@ -180,11 +190,13 @@ public class GameplayScreen implements Screen,InputProcessor {
             @Override
             public void makeAction() {
                 super.makeAction();
-                camera.position.y-=10;
-                player.collisionModel.y-=10;
+                if (player.isCanGoDOWN) {
+                    camera.position.y -= 10;
+                    player.setDeltaY(-10);
+                }
                 if (player.direction != Player.CurrentDirection.DOWN){
                     player.direction = Player.CurrentDirection.DOWN;
-                    //currentTexture = ***;
+                    player.currentTexture = player.moveDown;
                 }
 
             }
@@ -197,8 +209,10 @@ public class GameplayScreen implements Screen,InputProcessor {
             @Override
             public void makeAction() {
                 super.makeAction();
-                camera.position.x-=10;
-                player.collisionModel.x-=10;
+                if (player.isCanGoLEFT) {
+                    camera.position.x -= 10;
+                    player.setDeltaX(-10);
+                }
                 if (player.direction != Player.CurrentDirection.LEFT){
                     player.direction = Player.CurrentDirection.LEFT;
                     player.currentTexture = player.moveLeft;
@@ -214,8 +228,10 @@ public class GameplayScreen implements Screen,InputProcessor {
             @Override
             public void makeAction() {
                 super.makeAction();
-                camera.position.x+=10;
-                player.collisionModel.x+=10;
+                if (player.isCanGoRIGHT) {
+                    camera.position.x += 10;                                                            //переделать на доли от размера экрана
+                    player.setDeltaX(10);
+                }
                 if (player.direction != Player.CurrentDirection.RIGHT){
                     player.direction = Player.CurrentDirection.RIGHT;
                     player.currentTexture = player.moveRight;
@@ -251,26 +267,78 @@ public class GameplayScreen implements Screen,InputProcessor {
 
             for (int j = 0; j < levelMap.layer2[0].length; j++) {
 
-                if (player.getY() > levelMap.layer2[i][0].y && !isPlayerDrawn){
-                    gam.batch.draw(player.currentTexture, player.getX(), player.getY(), blockSize, blockSize);
+                if (player.y > levelMap.layer2[i][0].y && !isPlayerDrawn){
+                    gam.batch.draw(player.currentTexture, player.x, player.y, blockSize, blockSize);
                     isPlayerDrawn = true;
                 }
 
                 drawBlock(levelMap.layer2[i][j]);
 
-                if (player.getY() < levelMap.layer2[i][0].y && isPlayerDrawn){
-                    gam.batch.draw(player.currentTexture, player.getX(), player.getY(), blockSize, blockSize);
+                if (player.y < levelMap.layer2[i][0].y && isPlayerDrawn){
+                    gam.batch.draw(player.currentTexture, player.x, player.y, blockSize, blockSize);
                     isPlayerDrawn = false;
                 }
+                //gam.batch.draw(testcol, player.collisionModel.x, player.collisionModel.y, player.collisionModel.getWidth(), player.collisionModel.getHeight());
             }
         }
         isPlayerDrawn = false;
 
     }
 
+    public void checkCollisions(){
+
+        //for (int i = 1; i < 3; i++) {
+
+            if (player.playerBlockY + 1 < levelMap.layer2.length)
+                if (levelMap.layer2[player.playerBlockY + 1][player.playerBlockX].type == Block.Type.STONE_WALL)
+                    if (player.collisionModel.overlaps(levelMap.layer2[player.playerBlockY + 1][player.playerBlockX].collisionModel))
+                        player.isCanGoUP = false;
 
 
-    public void loadLevel(int num){
+
+
+            if (player.playerBlockX + 1 < levelMap.layer2[0].length)
+                if (levelMap.layer2[player.playerBlockY][player.playerBlockX + 1].type == Block.Type.STONE_WALL)
+                    if (player.collisionModel.overlaps(levelMap.layer2[player.playerBlockY][player.playerBlockX + 1].collisionModel))
+                        player.isCanGoRIGHT = false;
+
+            if (levelMap.layer2[player.playerBlockY][player.playerBlockX].type == Block.Type.STONE_WALL)
+                if (player.collisionModel.overlaps(levelMap.layer2[player.playerBlockY][player.playerBlockX].collisionModel)){
+                    player.isCanGoDOWN = false;
+                    player.isCanGoLEFT = false;
+                }
+
+
+            //if (player.playerBlockX - i > 0)
+                //if (levelMap.layer2[player.playerBlockY][player.playerBlockX - i].type == Block.Type.STONE_WALL)
+                   // if (levelMap.layer2[player.playerBlockY][player.playerBlockX - i].collisionModel.overlaps(player.collisionModel))
+                       // player.isCanGoLEFT = false;
+
+            if (player.playerBlockY + 1 < levelMap.layer2.length && player.playerBlockX + 1 < levelMap.layer2[0].length)
+                if (levelMap.layer2[player.playerBlockY + 1][player.playerBlockX+1].type == Block.Type.STONE_WALL)
+                    if (player.collisionModel.overlaps(levelMap.layer2[player.playerBlockY + 1][player.playerBlockX+1].collisionModel))
+                        player.isCanGoUP = false;
+
+           if (player.playerBlockY + 1 < levelMap.layer2.length && player.playerBlockX - 1 > 0)
+                if (levelMap.layer2[player.playerBlockY + 1][player.playerBlockX-1].type == Block.Type.STONE_WALL)
+                    if (player.collisionModel.overlaps(levelMap.layer2[player.playerBlockY + 1][player.playerBlockX-1].collisionModel))
+                        player.isCanGoUP = false;
+
+             if(player.playerBlockY - 1 >  0 && player.playerBlockX - 1 > 0)
+                if (levelMap.layer2[player.playerBlockY - 1][player.playerBlockX-1].type == Block.Type.STONE_WALL)
+                    if (player.collisionModel.overlaps(levelMap.layer2[player.playerBlockY - 1][player.playerBlockX-1].collisionModel))
+                        player.isCanGoDOWN = false;
+
+            if (player.playerBlockY - 1 >  0 && player.playerBlockX + 1 < levelMap.layer2[0].length)
+                if (levelMap.layer2[player.playerBlockY - 1][player.playerBlockX + 1].type == Block.Type.STONE_WALL)
+                    if (player.collisionModel.overlaps(levelMap.layer2[player.playerBlockY - 1][player.playerBlockX + 1].collisionModel))
+                        player.isCanGoDOWN = false;
+
+
+       // }
+    }
+
+    public void loadLevel(int num){  //загрузка будет происходить из базы данных
 
         Gdx.app.log("INFO","SIZE ");
 
@@ -300,8 +368,11 @@ public class GameplayScreen implements Screen,InputProcessor {
     }
 
     public void drawBlock(Block block){
-        if (block.type != Block.Type.NONE)
-            gam.batch.draw(txM.getBlockTexture(block.type,block.shape),block.x,block.y,blockSize,blockSize);
+        if (block.type != Block.Type.NONE) {
+            gam.batch.draw(txM.getBlockTexture(block.type, block.shape), block.x, block.y, blockSize, blockSize);
+            //if (block.type == Block.Type.STONE_WALL)
+                //gam.batch.draw(testcol, block.collisionModel.x, block.collisionModel.y, block.collisionModel.getWidth(), block.collisionModel.getHeight());
+        }
     }
 
     //*****************************************************
