@@ -72,6 +72,8 @@ public class GameplayScreen implements Screen,InputProcessor {
     private OrthographicCamera cameraUI;
     private OrthographicCamera camera;
 
+    private float stateTime;
+
     public GameplayScreen (final LabyrinthGame game){
         gam = game;
 
@@ -102,7 +104,7 @@ public class GameplayScreen implements Screen,InputProcessor {
 
         gam.batchUI.setProjectionMatrix(cameraUI.combined);
         gam.batch.setProjectionMatrix(camera.combined);
-
+        stateTime += Gdx.graphics.getDeltaTime();
 
         //_______________________________________
         gam.batch.begin();
@@ -124,6 +126,20 @@ public class GameplayScreen implements Screen,InputProcessor {
                 leftButton.makeAction();
             if (rightButton.checkZone.contains(Gdx.input.getX(),scrH-Gdx.input.getY()))
                 rightButton.makeAction();
+        }else{
+            switch (player.direction){
+                case LEFT:
+                    player.direction = Player.CurrentDirection.STAND_LEFT;
+                    break;
+                case RIGHT:
+                    player.direction = Player.CurrentDirection.STAND_RIGHT;
+                    break;
+                case DOWN:
+                    player.direction = Player.CurrentDirection.STAND_DOWN;
+                    break;
+                case UP:
+                    player.direction = Player.CurrentDirection.STAND_UP;
+            }
         }
 
         player.updateState();
@@ -173,8 +189,8 @@ public class GameplayScreen implements Screen,InputProcessor {
             public void makeAction() {
                 super.makeAction();
                 if (player.isCanGoUP) {
-                    camera.position.y += 10;
-                    player.setDeltaY(10);
+                    camera.position.y += 5;
+                    player.setDeltaY(5);
                 }
                 if (player.direction != Player.CurrentDirection.UP){
                     player.direction = Player.CurrentDirection.UP;
@@ -191,12 +207,11 @@ public class GameplayScreen implements Screen,InputProcessor {
             public void makeAction() {
                 super.makeAction();
                 if (player.isCanGoDOWN) {
-                    camera.position.y -= 10;
-                    player.setDeltaY(-10);
+                    camera.position.y -= 5;
+                    player.setDeltaY(-5);
                 }
                 if (player.direction != Player.CurrentDirection.DOWN){
                     player.direction = Player.CurrentDirection.DOWN;
-                    player.currentTexture = player.moveDown;
                 }
 
             }
@@ -210,12 +225,11 @@ public class GameplayScreen implements Screen,InputProcessor {
             public void makeAction() {
                 super.makeAction();
                 if (player.isCanGoLEFT) {
-                    camera.position.x -= 10;
-                    player.setDeltaX(-10);
+                    camera.position.x -= 5;
+                    player.setDeltaX(-5);
                 }
                 if (player.direction != Player.CurrentDirection.LEFT){
                     player.direction = Player.CurrentDirection.LEFT;
-                    player.currentTexture = player.moveLeft;
                 }
 
             }
@@ -229,12 +243,11 @@ public class GameplayScreen implements Screen,InputProcessor {
             public void makeAction() {
                 super.makeAction();
                 if (player.isCanGoRIGHT) {
-                    camera.position.x += 10;                                                            //переделать на доли от размера экрана
-                    player.setDeltaX(10);
+                    camera.position.x += 5;                                                            //переделать на доли от размера экрана
+                    player.setDeltaX(5);
                 }
                 if (player.direction != Player.CurrentDirection.RIGHT){
                     player.direction = Player.CurrentDirection.RIGHT;
-                    player.currentTexture = player.moveRight;
                 }
             }
         };
@@ -268,14 +281,14 @@ public class GameplayScreen implements Screen,InputProcessor {
             for (int j = 0; j < levelMap.layer2[0].length; j++) {
 
                 if (player.y > levelMap.layer2[i][0].y && !isPlayerDrawn){
-                    gam.batch.draw(player.currentTexture, player.x, player.y, blockSize, blockSize);
+                    gam.batch.draw(player.getCurrentTexture(stateTime), player.x, player.y, blockSize, blockSize);
                     isPlayerDrawn = true;
                 }
 
                 drawBlock(levelMap.layer2[i][j]);
 
                 if (player.y < levelMap.layer2[i][0].y && isPlayerDrawn){
-                    gam.batch.draw(player.currentTexture, player.x, player.y, blockSize, blockSize);
+                    gam.batch.draw(player.getCurrentTexture(stateTime), player.x, player.y, blockSize, blockSize);
                     isPlayerDrawn = false;
                 }
                 //gam.batch.draw(testcol, player.collisionModel.x, player.collisionModel.y, player.collisionModel.getWidth(), player.collisionModel.getHeight());

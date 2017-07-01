@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public  class Animator {
 
-    static Animation initAnim(int num_frames, String directory,float duration){
+    public static Animation initAnim(int num_frames, String directory,float duration){
         TextureRegion[] tr;
         tr = new TextureRegion[num_frames];
         for (int i = 0; i < num_frames; i++){
