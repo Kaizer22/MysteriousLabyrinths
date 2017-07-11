@@ -4,6 +4,9 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Array;
+
+import sky.free.game.Gameplay.LevelMap;
 
 public class LabyrinthGame extends Game {
 
@@ -11,7 +14,12 @@ public class LabyrinthGame extends Game {
 	SpriteBatch batch;
 	BitmapFont font;
 	Music maintheme;
+	Array<LevelMap> allLevels;
 
+
+	public LabyrinthGame(Array<LevelMap> aL){
+		allLevels = aL;
+	}
 	
 	@Override
 	public void create () {

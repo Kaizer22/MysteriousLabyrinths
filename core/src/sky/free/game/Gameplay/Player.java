@@ -16,6 +16,7 @@ import sky.free.game.Animator;
 public class Player extends Actor {
      // или currentAnimation
     public Rectangle collisionModel;
+    public Rectangle actionZone;
     public CurrentDirection direction;
 
 
@@ -43,14 +44,14 @@ public class Player extends Actor {
 
     public Player(float X,float Y,float blockSize){
 
-        moveLeft = Animator.initAnim(5,"gameplay/player/walk_left/",0.3f);
-        moveRight = Animator.initAnim(5,"gameplay/player/walk_right/",0.3f);
+        moveLeft = Animator.initAnim(5,"gameplay/player/walk_left/",0.25f);
+        moveRight = Animator.initAnim(5,"gameplay/player/walk_right/",0.25f);
         moveDown = Animator.initAnim(7,"gameplay/player/walk_down/",0.2f);
-        moveUp = Animator.initAnim(6,"gameplay/player/walk_up/",0.25f);
-        standRight = Animator.initAnim(6,"gameplay/player/stand_right/",0.25f);
-        standLeft = Animator.initAnim(6,"gameplay/player/stand_left/",0.25f);
+        moveUp = Animator.initAnim(6,"gameplay/player/walk_up/",0.2f);
+        standRight = Animator.initAnim(6,"gameplay/player/stand_right/",0.2f);
+        standLeft = Animator.initAnim(6,"gameplay/player/stand_left/",0.2f);
         standDown = Animator.initAnim(6,"gameplay/player/stand_down/",0.25f);
-        standUp = Animator.initAnim(5,"gameplay/player/stand_up/",0.3f);
+        standUp = Animator.initAnim(5,"gameplay/player/stand_up/",0.25f);
 
         isCanGoUP = true;
         isCanGoDOWN = true;
@@ -64,6 +65,7 @@ public class Player extends Actor {
         direction = CurrentDirection.RIGHT;
         collisionModel = new Rectangle(x+blockSize/3,y,blockSize/3,blockSize/10*2);
         playerSize = blockSize;
+        actionZone = new Rectangle(x,y,playerSize,playerSize);
         playerBlockX = (int)(collisionModel.x/playerSize);
         playerBlockY = (int)(collisionModel.y/playerSize);
     }

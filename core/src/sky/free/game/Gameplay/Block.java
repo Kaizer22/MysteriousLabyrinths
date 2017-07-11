@@ -11,18 +11,18 @@ public class Block extends Actor{
     public Type type;
     public Shape shape;
 
+    public boolean isTorchOnIt;
+    public boolean isTorchActive;
+
     public Rectangle collisionModel;
 
     public float x;
     public float y;
 
-    public Block(Type t,Shape s, int size, float X,float Y){
+    public Block(Type t,Shape s,boolean isTorch){ //int size, float X,float Y){
         type = t;
         shape = s;
-        x = X;
-        y = Y;
-        if (type == Type.STONE_WALL)
-            collisionModel = setCollision(size);
+
     }
 
     public Block( float X,float Y){
@@ -31,6 +31,13 @@ public class Block extends Actor{
         collisionModel = null;
         x = X;
         y = Y;
+    }
+
+    public void setParam(float X, float Y, float size){
+        x = X;
+        y = Y;
+        if (type == Type.STONE_WALL)
+            collisionModel = setCollision(size);
     }
 
     private Rectangle setCollision(float size){
@@ -55,9 +62,11 @@ public class Block extends Actor{
     }
 
     public enum Type{
-        STONE_BACKGROUND,STONE_WALL,DARKNESS    ,NONE
+        STONE_BACKGROUND,STONE_WALL,NONE,
+
+        DOESNT_MATTER
     }
     public enum Shape{
-        TRIPARTATE_LEFT,TRIPARTATE_RIGHT,CONNECTOR_HORIZONTAL     ,NONE
+        TRIPARTATE_LEFT,TRIPARTATE_RIGHT,CONNECTOR_HORIZONTAL,DARKNESS      ,NONE
     }
 }

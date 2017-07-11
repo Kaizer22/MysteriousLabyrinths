@@ -6,12 +6,14 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import sky.free.game.Gameplay.Block;
 import sky.free.game.Gameplay.LevelMap;
+import sky.free.game.Gameplay.MapBuilder;
 import sky.free.game.Gameplay.Player;
 
 /**
@@ -27,7 +29,7 @@ public class GameplayScreen implements Screen,InputProcessor {
             {1,0,1,2,3,0,0,0,0,0,0,0,0,1},
             {1,0,1,2,3,0,0,0,0,0,0,0,0,1},
             {1,0,1,2,3,0,0,0,0,0,0,0,0,1},
-            {1,0,1,2,3,0,0,0,0,0,0,0,0,1},
+            {1,0,1,2,3,0,0,4,4,0,0,0,0,1},
             {1,0,1,2,3,0,0,0,0,0,0,0,0,1},
             {1,0,1,2,3,0,0,0,0,0,0,0,0,1},
             {1,0,1,0,0,0,0,0,0,0,0,0,0,1},
@@ -165,6 +167,24 @@ public class GameplayScreen implements Screen,InputProcessor {
             @Override
             public void makeAction() {
 
+                if (player.playerBlockY + 1 < levelMap.layer2.length )
+                    if (levelMap.layer2[player.playerBlockY + 1][player.playerBlockX].type == Block.Type.STONE_WALL && player.y < levelMap.layer2[player.playerBlockY + 1][player.playerBlockX].y && levelMap.layer2[player.playerBlockY + 1][player.playerBlockX].isTorchOnIt){
+
+                        if (player.actionZone.overlaps(levelMap.layer2[player.playerBlockY + 1][player.playerBlockX].collisionModel))
+                            Gdx.app.log("ASSA", "Im HERE");
+                            levelMap.layer2[player.playerBlockY + 1][player.playerBlockX].isTorchActive = true;
+                }
+
+                if (player.playerBlockX + 1 < levelMap.layer2[0].length )
+                    if (levelMap.layer2[player.playerBlockY][player.playerBlockX+1].type == Block.Type.STONE_WALL && player.y<levelMap.layer2[player.playerBlockY ][player.playerBlockX+1].y && levelMap.layer2[player.playerBlockY][player.playerBlockX+1].isTorchOnIt )
+                        if(player.actionZone.overlaps(levelMap.layer2[player.playerBlockY][player.playerBlockX+1].collisionModel))
+                            levelMap.layer2[player.playerBlockY][player.playerBlockX+1].isTorchActive = true;
+
+                if (player.playerBlockX - 1 > 0 )
+                    if (levelMap.layer2[player.playerBlockY][player.playerBlockX-1].type == Block.Type.STONE_WALL && player.y<levelMap.layer2[player.playerBlockY ][player.playerBlockX-1].y && levelMap.layer2[player.playerBlockY][player.playerBlockX-1].isTorchOnIt )
+                        if(player.actionZone.overlaps(levelMap.layer2[player.playerBlockY][player.playerBlockX-1].collisionModel))
+                            levelMap.layer2[player.playerBlockY][player.playerBlockX-1].isTorchActive = true;
+
             }
         };
 
@@ -194,7 +214,6 @@ public class GameplayScreen implements Screen,InputProcessor {
                 }
                 if (player.direction != Player.CurrentDirection.UP){
                     player.direction = Player.CurrentDirection.UP;
-                    //currentTexture = ***;
                 }
             }
         };
@@ -300,7 +319,6 @@ public class GameplayScreen implements Screen,InputProcessor {
 
     public void checkCollisions(){
 
-        //for (int i = 1; i < 3; i++) {
 
             if (player.playerBlockY + 1 < levelMap.layer2.length)
                 if (levelMap.layer2[player.playerBlockY + 1][player.playerBlockX].type == Block.Type.STONE_WALL)
@@ -321,11 +339,6 @@ public class GameplayScreen implements Screen,InputProcessor {
                     player.isCanGoLEFT = false;
                 }
 
-
-            //if (player.playerBlockX - i > 0)
-                //if (levelMap.layer2[player.playerBlockY][player.playerBlockX - i].type == Block.Type.STONE_WALL)
-                   // if (levelMap.layer2[player.playerBlockY][player.playerBlockX - i].collisionModel.overlaps(player.collisionModel))
-                       // player.isCanGoLEFT = false;
 
             if (player.playerBlockY + 1 < levelMap.layer2.length && player.playerBlockX + 1 < levelMap.layer2[0].length)
                 if (levelMap.layer2[player.playerBlockY + 1][player.playerBlockX+1].type == Block.Type.STONE_WALL)
@@ -352,37 +365,19 @@ public class GameplayScreen implements Screen,InputProcessor {
     }
 
     public void loadLevel(int num){  //загрузка будет происходить из базы данных
-
         Gdx.app.log("INFO","SIZE ");
-
-        levelMap = new LevelMap(new Block[levelmap.length][levelmap[0].length],new Block[levelmap.length][levelmap[0].length]);
-        for (int i = 0; i < levelmap.length; i++) {
-            for (int j = 0; j < levelmap[0].length; j++) {
-                    switch (levelmap[i][j]){
-                        case 0:
-                            levelMap.layer1[i][j] = new Block(Block.Type.STONE_BACKGROUND, Block.Shape.NONE,blockSize,j*blockSize,i*blockSize);
-                            levelMap.layer2[i][j] = new Block(j*blockSize,i*blockSize);
-                            break;
-                        case 1:
-                            levelMap.layer2[i][j] = new Block(Block.Type.STONE_WALL, Block.Shape.TRIPARTATE_LEFT,blockSize,j*blockSize,i*blockSize);
-                            levelMap.layer1[i][j] = new Block(Block.Type.STONE_BACKGROUND, Block.Shape.NONE,blockSize,j*blockSize,i*blockSize);
-                            break;
-                        case 2:
-                            levelMap.layer2[i][j] = new Block(Block.Type.STONE_WALL, Block.Shape.CONNECTOR_HORIZONTAL,blockSize,j*blockSize,i*blockSize);
-                            levelMap.layer1[i][j] = new Block(Block.Type.STONE_BACKGROUND, Block.Shape.NONE,blockSize,j*blockSize,i*blockSize);
-                            break;
-                        case 3:
-                            levelMap.layer2[i][j] = new Block(Block.Type.STONE_WALL, Block.Shape.TRIPARTATE_RIGHT,blockSize,j*blockSize,i*blockSize);
-                            levelMap.layer1[i][j] = new Block(Block.Type.STONE_BACKGROUND, Block.Shape.NONE,blockSize,j*blockSize,i*blockSize);
-                            break;
-                    }
-            }
-        }
+        //load int[][] from database, using num
+        levelMap = gam.allLevels.get(0);
     }
 
     public void drawBlock(Block block){
         if (block.type != Block.Type.NONE) {
             gam.batch.draw(txM.getBlockTexture(block.type, block.shape), block.x, block.y, blockSize, blockSize);
+            if (block.isTorchOnIt)
+                if (block.isTorchActive){
+                    gam.batch.draw((TextureRegion)txM.torchA.getKeyFrame(stateTime,true),block.x, block.y, blockSize, blockSize);
+                }else
+                    gam.batch.draw(txM.torch, block.x, block.y, blockSize, blockSize);
             //if (block.type == Block.Type.STONE_WALL)
                 //gam.batch.draw(testcol, block.collisionModel.x, block.collisionModel.y, block.collisionModel.getWidth(), block.collisionModel.getHeight());
         }

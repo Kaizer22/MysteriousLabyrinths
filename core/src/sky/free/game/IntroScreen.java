@@ -94,10 +94,7 @@ public class IntroScreen implements Screen {
             camera.unproject(touchPos);
             cursor.x = touchPos.x - cursor.getWidth() / 2;
             cursor.y = touchPos.y - cursor.getWidth() / 2;
-            if (cursor.overlaps(controlZone)) {
                 toNextScreen = true;
-
-            }
 
         }
         if (isReadyToNext) {
@@ -112,7 +109,7 @@ public class IntroScreen implements Screen {
 
        gam.batchUI.draw(currentChFrame,spX,spY, spSize, spSize);
        gam.font.draw(gam.batchUI,"FREE SKY GAMES presents",spX,spY-gam.font.getCapHeight(),500,10,true);
-       gam.batchUI.draw(controlZ,controlZone.x,controlZone.y,controlZone.getWidth(),controlZone.getHeight());
+       gam.font.draw(gam.batchUI,"tap anywhere to continue",spX,gam.font.getCapHeight()*2,500,10,true);
        gam.batchUI.draw(currentCursFrame, cursor.x, cursor.y, cursor.getWidth(), cursor.getHeight());
 
    }

@@ -1,6 +1,7 @@
 package sky.free.game;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.utils.Array;
 
 import java.util.HashMap;
@@ -16,6 +17,10 @@ public class TextureManager {
     Texture leftButtonBar;
     Texture rightButtonBar;
 
+    Texture torch;
+
+    Animation torchA;
+
 
 
     HashMap<String,Texture> blocks;
@@ -23,6 +28,9 @@ public class TextureManager {
         blocks = new HashMap<String, Texture>();
         leftButtonBar = new Texture("gameplay/ui/left_bar.png");
         rightButtonBar = new Texture("gameplay/ui/right_bar.png");
+        torch = new Texture("gameplay/torch.png");
+
+        torchA = Animator.initAnim(8,"gameplay/torch/",0.15f);
 
 
         for (Block.Type t : Block.Type.values()) {      // переделать под TextureAtlas
@@ -32,7 +40,7 @@ public class TextureManager {
                         blocks.put(t.toString().toLowerCase() + "_" + s.toString().toLowerCase(), new Texture("gameplay/block_textures/" + t.toString().toLowerCase() + "/" + s.toString().toLowerCase() + ".png"));
                     }
                 }
-            }else if(t != Block.Type.NONE){
+            }else if(t != Block.Type.NONE && t != Block.Type.DOESNT_MATTER){
                 blocks.put(t.toString().toLowerCase() + "_" + "none", new Texture("gameplay/block_textures/" + t.toString().toLowerCase() + "/" + "none.png"));
             }
 
@@ -49,6 +57,7 @@ public class TextureManager {
         }
         leftButtonBar.dispose();
         rightButtonBar.dispose();
+        torch.dispose();
 
     }
 }
