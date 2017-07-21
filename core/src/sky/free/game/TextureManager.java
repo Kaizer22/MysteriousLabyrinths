@@ -2,7 +2,6 @@ package sky.free.game;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.utils.Array;
 
 import java.util.HashMap;
 
@@ -34,7 +33,7 @@ public class TextureManager {
 
 
         for (Block.Type t : Block.Type.values()) {      // переделать под TextureAtlas
-            if (t == Block.Type.STONE_WALL) {
+            if (t == Block.Type.WALL) {
                 for (Block.Shape s : Block.Shape.values()) {
                     if (s != Block.Shape.NONE) {
                         blocks.put(t.toString().toLowerCase() + "_" + s.toString().toLowerCase(), new Texture("gameplay/block_textures/" + t.toString().toLowerCase() + "/" + s.toString().toLowerCase() + ".png"));

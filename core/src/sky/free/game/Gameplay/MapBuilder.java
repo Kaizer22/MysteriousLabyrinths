@@ -22,26 +22,26 @@ public class MapBuilder {
             for (int j = 0; j < levelmap[0].length; j++) {
                 switch (levelmap[i][j]){
                     case 0:
-                        levelMap.layer1[i][j] = new Block(Block.Type.STONE_BACKGROUND, Block.Shape.NONE,blockSize,j*blockSize,i*blockSize);
+                        levelMap.layer1[i][j] = new Block(Block.Type.BACKGROUND, Block.Shape.NONE,blockSize,j*blockSize,i*blockSize);
                         levelMap.layer2[i][j] = new Block(j*blockSize,i*blockSize);
                         break;
                     case 1:
-                        levelMap.layer2[i][j] = new Block(Block.Type.STONE_WALL, Block.Shape.TRIPARTATE_LEFT,blockSize,j*blockSize,i*blockSize);
-                        levelMap.layer1[i][j] = new Block(Block.Type.STONE_BACKGROUND, Block.Shape.NONE,blockSize,j*blockSize,i*blockSize);
+                        levelMap.layer2[i][j] = new Block(Block.Type.WALL, Block.Shape.TRIPARTATE_LEFT,blockSize,j*blockSize,i*blockSize);
+                        levelMap.layer1[i][j] = new Block(Block.Type.BACKGROUND, Block.Shape.NONE,blockSize,j*blockSize,i*blockSize);
                         break;
                     case 2:
-                        levelMap.layer2[i][j] = new Block(Block.Type.STONE_WALL, Block.Shape.CONNECTOR_HORIZONTAL,blockSize,j*blockSize,i*blockSize);
-                        levelMap.layer1[i][j] = new Block(Block.Type.STONE_BACKGROUND, Block.Shape.NONE,blockSize,j*blockSize,i*blockSize);
+                        levelMap.layer2[i][j] = new Block(Block.Type.WALL, Block.Shape.CONNECTOR_HORIZONTAL,blockSize,j*blockSize,i*blockSize);
+                        levelMap.layer1[i][j] = new Block(Block.Type.BACKGROUND, Block.Shape.NONE,blockSize,j*blockSize,i*blockSize);
                         break;
                     case 3:
-                        levelMap.layer2[i][j] = new Block(Block.Type.STONE_WALL, Block.Shape.TRIPARTATE_RIGHT,blockSize,j*blockSize,i*blockSize);
-                        levelMap.layer1[i][j] = new Block(Block.Type.STONE_BACKGROUND, Block.Shape.NONE,blockSize,j*blockSize,i*blockSize);
+                        levelMap.layer2[i][j] = new Block(Block.Type.WALL, Block.Shape.TRIPARTATE_RIGHT,blockSize,j*blockSize,i*blockSize);
+                        levelMap.layer1[i][j] = new Block(Block.Type.BACKGROUND, Block.Shape.NONE,blockSize,j*blockSize,i*blockSize);
                         break;
 
                     case 4:
-                        levelMap.layer2[i][j] = new Block(Block.Type.STONE_WALL, Block.Shape.TRIPARTATE_RIGHT,blockSize,j*blockSize,i*blockSize);
+                        levelMap.layer2[i][j] = new Block(Block.Type.WALL, Block.Shape.TRIPARTATE_RIGHT,blockSize,j*blockSize,i*blockSize);
                         levelMap.layer2[i][j].isTorchOnIt = true;
-                        levelMap.layer1[i][j] = new Block(Block.Type.STONE_BACKGROUND, Block.Shape.NONE,blockSize,j*blockSize,i*blockSize);
+                        levelMap.layer1[i][j] = new Block(Block.Type.BACKGROUND, Block.Shape.NONE,blockSize,j*blockSize,i*blockSize);
                         break;
                 }
             }

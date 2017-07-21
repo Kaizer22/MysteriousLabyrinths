@@ -28,7 +28,7 @@ public class LabyrinthGame extends Game {
 		font = new BitmapFont();
 		maintheme = Gdx.audio.newMusic(Gdx.files.internal("maintheme.mp3"));
 		maintheme.setLooping(true);
-		maintheme.play();
+
 
 		this.setScreen(new IntroScreen(this));
 	}
