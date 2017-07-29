@@ -149,7 +149,9 @@ public class GameplayScreen implements Screen,InputProcessor {
                // Gdx.app.log("TEST_LEVEL",levelMap.layer2[i][j].type.toString() + "    " + levelMap.layer2[i][j].shape.toString());
            // }
         //}
-        player = new Player(scrW/2-blockSize/2,scrH/2-blockSize/2,blockSize);
+        player = new Player(levelMap.startX*blockSize,levelMap.startY*blockSize,blockSize);
+        camera.position.x = player.x + blockSize/2;
+        camera.position.y = player.y + blockSize/2;
 
         Rectangle r1 = new Rectangle(scrW/4*3+scrW/8-scrH/6,scrH/5*2-scrH/6,scrH/3,scrH/3);
         Texture aB = new Texture("gameplay/ui/button_action.png");
@@ -371,7 +373,7 @@ public class GameplayScreen implements Screen,InputProcessor {
     public void drawBlock(Block block){
         if (block.type != Block.Type.NONE) {
 
-            n++;
+            //n++;
             try {
                 gam.batch.draw(txM.getBlockTexture(block.type, block.shape), block.x, block.y, blockSize, blockSize);
             }catch (NullPointerException e){

@@ -18,6 +18,8 @@ import com.badlogic.gdx.math.Rectangle;
 
 public  class MenuScreen implements Screen, InputProcessor  {
 
+    float deltaMove;
+
     final LabyrinthGame gam;
 
     private OrthographicCamera camera;
@@ -105,17 +107,17 @@ public  class MenuScreen implements Screen, InputProcessor  {
         gam.batchUI.draw(buttonMusic.currentTexture, buttonMusic.checkZone.x, buttonMusic.checkZone.y, buttonMusic.checkZone.getWidth(), buttonMusic.checkZone.getHeight());
 
         if (buttonPlay.checkZone.x > scrW/4*3-buttonPlay.checkZone.getWidth()/2){
-            buttonPlay.checkZone.x-=2;
+            buttonPlay.checkZone.x-= deltaMove;
 
         }else
             isButtonsReady = true;
 
         if (buttonExit.checkZone.x > scrW/4*3-buttonExit.checkZone.getWidth()/2){
-            buttonExit.checkZone.x-=2;
+            buttonExit.checkZone.x-=deltaMove;
         }
 
         if (buttonMusic.checkZone.x< 10){
-            buttonMusic.checkZone.x +=2;
+            buttonMusic.checkZone.x += deltaMove / 3;
         }
 
 
@@ -146,6 +148,12 @@ public  class MenuScreen implements Screen, InputProcessor  {
         buttonPlay.currentTexture = buttonPlay.texture;
         buttonExit.currentTexture = buttonExit.texture;
 
+        if (buttonMusic.isActivated)
+            buttonMusic.currentTexture = buttonMusic.textureCon1;
+        else
+            buttonMusic.currentTexture = buttonMusic.texture;
+
+
         if (buttonPlay.checkZone.contains((float)screenX,(float)scrH-screenY)){
             buttonPlay.makeAction();
         }
@@ -157,10 +165,7 @@ public  class MenuScreen implements Screen, InputProcessor  {
             buttonMusic.makeAction();
 
         }
-        else if (buttonMusic.isActivated)
-            buttonMusic.currentTexture = buttonMusic.textureCon1;
-        else
-            buttonMusic.currentTexture = buttonMusic.texture;
+
 
         return true;
     }
@@ -171,6 +176,8 @@ public  class MenuScreen implements Screen, InputProcessor  {
 
         scrH = height;
         scrW = width;
+
+        deltaMove = scrH/200;
 
         Rectangle r1 = new Rectangle(width,height/2,width/4,height/6);
         Rectangle r2 = new Rectangle(width,height/2-height/6-10,width/4,height/6);

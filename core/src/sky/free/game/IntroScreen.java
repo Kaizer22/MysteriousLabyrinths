@@ -26,7 +26,7 @@ public class IntroScreen implements Screen,InputProcessor {
     private Sound telephone;
 
     private boolean trigger;
-    private boolean nextTrigger = true;
+
 
 
     private OrthographicCamera camera;
@@ -150,7 +150,6 @@ public class IntroScreen implements Screen,InputProcessor {
                spY+=2;
                if (spSize<0){
                    condition++;
-                   nextTrigger = true;
                }
                break;
            case 2:
@@ -159,8 +158,7 @@ public class IntroScreen implements Screen,InputProcessor {
                    trigger = false;
                }
                currentFrame = (TextureRegion) streetAnim.getKeyFrame(stateTime,true);
-               if (streetAnim.isAnimationFinished(stateTime))
-                   nextTrigger = true;
+
                break;
            case 3:
                if (trigger){
@@ -169,8 +167,6 @@ public class IntroScreen implements Screen,InputProcessor {
                    trigger = false;
                }
                currentFrame = (TextureRegion) officeAnim.getKeyFrame(stateTime,true);
-               if (officeAnim.isAnimationFinished(stateTime))
-                   nextTrigger = true;
                break;
            case 4:
                if (trigger){
@@ -186,8 +182,7 @@ public class IntroScreen implements Screen,InputProcessor {
                break;
            case 5:
                currentFrame = (TextureRegion) houseAnim.getKeyFrame(stateTime,true);
-               if (houseAnim.isAnimationFinished(stateTime))
-                   nextTrigger = true;
+
                break;
            case 6:
                spooky.stop();
@@ -258,7 +253,7 @@ public class IntroScreen implements Screen,InputProcessor {
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         condition++;
-        nextTrigger = false;
+
         trigger = true;
         return false;
     }

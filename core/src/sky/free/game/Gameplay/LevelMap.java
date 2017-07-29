@@ -16,9 +16,15 @@ public class LevelMap extends Group {
     public int finishX;
     public int finishY;
 
-    public LevelMap(Block[][] layer_1,Block[][] layer_2,int startX,int startY, int finishX,int finishY){
+    public LevelMap(Block[][] layer_1,Block[][] layer_2,int stX,int stY, int finX,int finY){
         layer1 = layer_1;
         layer2 = layer_2;
+
+        startX = stX;
+        startY = stY;
+
+        finishX = finX;
+        finishY = finY;
 
 
     }

@@ -1,11 +1,13 @@
 package sky.free.game;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.badlogic.gdx.Gdx;
@@ -34,7 +36,7 @@ public class AndroidLauncher extends AndroidApplication {
 
 	}
 
-	private  void launchGame(){
+	private  void launchGame( ){
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		config.useAccelerometer = false;
 		config.useCompass = false;
@@ -44,139 +46,121 @@ public class AndroidLauncher extends AndroidApplication {
 
 
 
-	private void loadLevels() {
-        SQLiteDatabase database = db.getReadableDatabase();
-        //db.onUpgrade(database,0,1);
 
-        try {
-            db.updateDataBase();
-        } catch (IOException mIOException) {
-            throw new Error("UnableToUpdateDatabase");
-        }
+        private void loadLevels() {
+            SQLiteDatabase database = db.getReadableDatabase();
+            db.onUpgrade(database, 0, 1);
 
-        try {
-            database = db.getReadableDatabase();
-        } catch (SQLException mSQLException) {
-            throw mSQLException;
-        }
+            try {
+                db.updateDataBase();
+            } catch (IOException mIOException) {
+                throw new Error("UnableToUpdateDatabase");
+            }
 
-        Block[][] bufLayer1;
-        Block[][] bufLayer2;
+            try {
+                database = db.getReadableDatabase();
+            } catch (SQLException mSQLException) {
+                throw mSQLException;
+            }
 
-
-        String selection;
-
-        int levelIDIndex;
-        int levelSizeXIndex;
-        int levelSizeYIndex;
-        int levelStartXIndex;
-        int levelStartYIndex;
-        int levelFinishXIndex;
-        int levelFinishYIndex;
-
-        int levelID;
-        int levelSizeX;
-        int levelSizeY;
-        int levelStartX;
-        int levelStartY;
-        int levelFinishX;
-        int levelFinishY;
-
-        int blockXIndex;
-        int blockYIndex;
-        int blockTypeIndex;
-        int blockShapeIndex;
-        int blockIsTorchOnItIndex;
-
-        int blockX;
-        int blockY;
-        String blockType;
-        String blockShape;
-        int blockIsTorchOnIt;
+            Block[][] bufLayer1;
+            Block[][] bufLayer2;
 
 
-        Cursor cursor = database.query(DBHelper.TABLE_LEVELS_INFO, null, null, null, null, null, null);
-        Cursor blocksCursor;
-        cursor.moveToFirst();
+            String selection;
 
-        levelIDIndex = cursor.getColumnIndex(DBHelper.KEY_ID);
-        levelSizeXIndex = cursor.getColumnIndex(DBHelper.KEY_LEVEL_SIZE_X);
-        levelSizeYIndex = cursor.getColumnIndex(DBHelper.KEY_LEVEL_SIZE_Y);
-        levelStartXIndex = cursor.getColumnIndex(DBHelper.KEY_LEVEL_START_X);
-        levelStartYIndex = cursor.getColumnIndex(DBHelper.KEY_LEVEL_START_Y);
-        levelFinishXIndex = cursor.getColumnIndex(DBHelper.KEY_LEVEL_FINISH_X);
-        levelFinishYIndex = cursor.getColumnIndex(DBHelper.KEY_LEVEL_FINISH_Y);
+            int levelIDIndex;
+            int levelSizeXIndex;
+            int levelSizeYIndex;
+            int levelStartXIndex;
+            int levelStartYIndex;
+            int levelFinishXIndex;
+            int levelFinishYIndex;
+
+            int levelID;
+            int levelSizeX;
+            int levelSizeY;
+            int levelStartX;
+            int levelStartY;
+            int levelFinishX;
+            int levelFinishY;
+
+            int blockXIndex;
+            int blockYIndex;
+            int blockTypeIndex;
+            int blockShapeIndex;
+            int blockIsTorchOnItIndex;
+
+            int blockX;
+            int blockY;
+            String blockType;
+            String blockShape;
+            int blockIsTorchOnIt;
 
 
-        do {
-            cursor = database.query(DBHelper.TABLE_LEVELS_INFO, null, null, null, null, null, null);
+            Cursor cursor = database.query(DBHelper.TABLE_LEVELS_INFO, null, null, null, null, null, null);
+            Cursor blocksCursor;
             cursor.moveToFirst();
-            levelID = cursor.getInt(levelIDIndex);
-            levelSizeX = cursor.getInt(levelSizeXIndex);
-            levelSizeY = cursor.getInt(levelSizeYIndex);
-            levelStartX = cursor.getInt(levelStartXIndex);
-            levelStartY = cursor.getInt(levelStartYIndex);
-            levelFinishX = cursor.getInt(levelFinishXIndex);
-            levelFinishY = cursor.getInt(levelFinishYIndex);
 
-            bufLayer1 = new Block[levelSizeY][levelSizeX];
-            bufLayer2 = new Block[levelSizeY][levelSizeX];
+            levelIDIndex = cursor.getColumnIndex(DBHelper.KEY_ID);
+            levelSizeXIndex = cursor.getColumnIndex(DBHelper.KEY_LEVEL_SIZE_X);
+            levelSizeYIndex = cursor.getColumnIndex(DBHelper.KEY_LEVEL_SIZE_Y);
+            levelStartXIndex = cursor.getColumnIndex(DBHelper.KEY_LEVEL_START_X);
+            levelStartYIndex = cursor.getColumnIndex(DBHelper.KEY_LEVEL_START_Y);
+            levelFinishXIndex = cursor.getColumnIndex(DBHelper.KEY_LEVEL_FINISH_X);
+            levelFinishYIndex = cursor.getColumnIndex(DBHelper.KEY_LEVEL_FINISH_Y);
 
-            selection = DBHelper.KEY_NUM_LEVEL + " = " + levelID;
-
-            blocksCursor = database.query(DBHelper.TABLE_LEVEL_MAPS, null, selection, null, null, null, null);
-            blocksCursor.moveToFirst();
-
-            blockXIndex = blocksCursor.getColumnIndex(DBHelper.KEY_BLOCK_X);
-            blockYIndex = blocksCursor.getColumnIndex(DBHelper.KEY_BLOCK_Y);
-            blockTypeIndex = blocksCursor.getColumnIndex(DBHelper.KEY_BLOCK_TYPE);
-            blockShapeIndex = blocksCursor.getColumnIndex(DBHelper.KEY_BLOCK_SHAPE);
-            blockIsTorchOnItIndex = blocksCursor.getColumnIndex(DBHelper.KEY_IS_TORCH_ON_BLOCK);
 
             do {
-                blockType = blocksCursor.getString(blockTypeIndex);
-                blockShape = blocksCursor.getString(blockShapeIndex);
-                blockIsTorchOnIt = blocksCursor.getInt(blockIsTorchOnItIndex);
-                blockX = blocksCursor.getInt(blockXIndex);
-                blockY = blocksCursor.getInt(blockYIndex);
+                cursor = database.query(DBHelper.TABLE_LEVELS_INFO, null, null, null, null, null, null);
+                cursor.moveToFirst();
+                levelID = cursor.getInt(levelIDIndex);
+                levelSizeX = cursor.getInt(levelSizeXIndex);
+                levelSizeY = cursor.getInt(levelSizeYIndex);
+                levelStartX = cursor.getInt(levelStartXIndex);
+                levelStartY = cursor.getInt(levelStartYIndex);
+                levelFinishX = cursor.getInt(levelFinishXIndex);
+                levelFinishY = cursor.getInt(levelFinishYIndex);
 
-                if (blockType.equals("BACKGROUND")) {
-                    bufLayer2[blockY][blockX] = new Block();
-                } else {
-                    //Toast.makeText(this, blockX + ":" + blockY + " ", Toast.LENGTH_SHORT).show();
-                    bufLayer2[blockY][blockX] = new Block(Block.Type.giveValue(blockType), Block.Shape.giveValue(blockShape), blockIsTorchOnIt == 1);
-                }
-                bufLayer1[blockY][blockX] = new Block(Block.Type.BACKGROUND, Block.Shape.NONE, false);
+                bufLayer1 = new Block[levelSizeY][levelSizeX];
+                bufLayer2 = new Block[levelSizeY][levelSizeX];
 
-            }while (blocksCursor.moveToNext()) ;
+                selection = DBHelper.KEY_NUM_LEVEL + " = " + levelID;
 
-            levels.add(new LevelMap(bufLayer1, bufLayer2, levelStartX, levelStartY, levelFinishX, levelFinishY));
-        } while (cursor.moveToNext());
+                blocksCursor = database.query(DBHelper.TABLE_LEVEL_MAPS, null, selection, null, null, null, null);
+                blocksCursor.moveToFirst();
 
-        cursor.close();
-        blocksCursor.close();
+                blockXIndex = blocksCursor.getColumnIndex(DBHelper.KEY_BLOCK_X);
+                blockYIndex = blocksCursor.getColumnIndex(DBHelper.KEY_BLOCK_Y);
+                blockTypeIndex = blocksCursor.getColumnIndex(DBHelper.KEY_BLOCK_TYPE);
+                blockShapeIndex = blocksCursor.getColumnIndex(DBHelper.KEY_BLOCK_SHAPE);
+                blockIsTorchOnItIndex = blocksCursor.getColumnIndex(DBHelper.KEY_IS_TORCH_ON_BLOCK);
 
-        launchGame();
+                do {
+                    blockType = blocksCursor.getString(blockTypeIndex);
+                    blockShape = blocksCursor.getString(blockShapeIndex);
+                    blockIsTorchOnIt = blocksCursor.getInt(blockIsTorchOnItIndex);
+                    blockX = blocksCursor.getInt(blockXIndex);
+                    blockY = blocksCursor.getInt(blockYIndex);
 
-		/*blockType = blocksCursor.getString(blockTypeIndex);
-		blockShape = blocksCursor.getString(blockShapeIndex);
-		blockIsTorchOnIt = blocksCursor.getInt(blockIsTorchOnItIndex);
+                    if (blockType.equals("BACKGROUND")) {
+                        bufLayer2[blockY][blockX] = new Block();
+                    } else {
+                        //Toast.makeText(this, blockX + ":" + blockY + " ", Toast.LENGTH_SHORT).show();
+                        bufLayer2[blockY][blockX] = new Block(Block.Type.giveValue(blockType), Block.Shape.giveValue(blockShape), blockIsTorchOnIt == 1);
+                    }
+                    bufLayer1[blockY][blockX] = new Block(Block.Type.BACKGROUND, Block.Shape.NONE, false);
+
+                } while (blocksCursor.moveToNext());
+
+                levels.add(new LevelMap(bufLayer1, bufLayer2, levelStartX, levelStartY, levelFinishX, levelFinishY));
+            } while (cursor.moveToNext());
+
+            cursor.close();
+            blocksCursor.close();
+
+            launchGame();
+        }
 
 
-		if (blockType.equals("BACKGROUND")) {
-			bufLayer2[blockY][blockX] = new Block();
-		} else {
-			if (!blockShape.equals("DARKNESS"))
-				Toast.makeText(this, blockType.toString() + " " + blockShape, Toast.LENGTH_SHORT).show();
-			bufLayer2[blockY][blockX] = new Block(Block.Type.WALL, Block.Shape.QUADRIPARTITE, blockIsTorchOnIt == 1);
-		}
-		bufLayer1[blockY][blockX] = new Block(Block.Type.BACKGROUND, Block.Shape.NONE, false);
-		{
-		}
-		while (blocksCursor.moveToNext()) ;
-
-		levels.add(new LevelMap(bufLayer1, bufLayer2, levelStartX, levelStartY, levelFinishX, levelFinishY));
-	*/
-
-    }
 }
