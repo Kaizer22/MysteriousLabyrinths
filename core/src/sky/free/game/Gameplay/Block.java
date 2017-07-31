@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
  * Created by denis on 26.06.17.
  */
 
-public class Block extends Actor{
+public class Block {
     public Type type;
     public Shape shape;
 

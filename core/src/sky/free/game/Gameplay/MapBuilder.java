@@ -16,8 +16,8 @@ public class MapBuilder {
         //add masks from database
     }
 
-    public LevelMap createLevelMap(int[][] levelmap, int blockSize){
-        LevelMap levelMap = new LevelMap(new Block[levelmap.length][levelmap[0].length],new Block[levelmap.length][levelmap[0].length]);
+    public Level createLevelMap(int[][] levelmap, int blockSize){
+        Level levelMap = new Level(new Block[levelmap.length][levelmap[0].length],new Block[levelmap.length][levelmap[0].length]);
         for (int i = 0; i < levelmap.length; i++) {
             for (int j = 0; j < levelmap[0].length; j++) {
                 switch (levelmap[i][j]){

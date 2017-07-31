@@ -1,38 +1,37 @@
 package sky.free.game;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.badlogic.gdx.utils.Array;
 
 import java.io.IOException;
 
+
 import sky.free.game.Gameplay.Block;
-import sky.free.game.Gameplay.LevelMap;
+import sky.free.game.Gameplay.Level;
 
 
-public class AndroidLauncher extends AndroidApplication {
+public class AndroidLauncher extends AndroidApplication  {
 	DBHelper db;
 
-	Array <LevelMap> levels;
-	@Override
+
+	Array <Level> levels;
+
+
+    @Override
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		db = new DBHelper(this);
 
 		levels = new Array<>();
 
-		loadLevels();
+		//loadLevels();
+        launchGame();
 
 	}
 
@@ -41,7 +40,7 @@ public class AndroidLauncher extends AndroidApplication {
 		config.useAccelerometer = false;
 		config.useCompass = false;
 		config.useGyroscope = false;
-		initialize(new LabyrinthGame(levels), config);
+		initialize(new LabyrinthGame(), config);
 	}
 
 
@@ -153,7 +152,7 @@ public class AndroidLauncher extends AndroidApplication {
 
                 } while (blocksCursor.moveToNext());
 
-                levels.add(new LevelMap(bufLayer1, bufLayer2, levelStartX, levelStartY, levelFinishX, levelFinishY));
+                levels.add(new Level(bufLayer1, bufLayer2, levelStartX, levelStartY, levelFinishX, levelFinishY));
             } while (cursor.moveToNext());
 
             cursor.close();
@@ -163,4 +162,7 @@ public class AndroidLauncher extends AndroidApplication {
         }
 
 
+
 }
+
+

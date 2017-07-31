@@ -8,18 +8,18 @@ import com.badlogic.gdx.math.Rectangle;
  */
 
 public abstract class Button  {
-    Rectangle checkZone;
+    public Rectangle checkZone;
 
     boolean isActivatable;
     boolean isActivated = false; // Condition 0/1
 
-    Texture currentTexture;
+    public Texture currentTexture;
 
-    Texture texture;            // Condition 0
-    Texture texturePressed;
+    public Texture texture;            // Condition 0
+    public Texture texturePressed;
 
-    Texture textureCon1;        // Condition 1
-    Texture texturePressedCon1;
+    public Texture textureCon1;        // Condition 1
+    public Texture texturePressedCon1;
 
     public Button (Rectangle b,Texture t, Texture tP ){
         checkZone = b;

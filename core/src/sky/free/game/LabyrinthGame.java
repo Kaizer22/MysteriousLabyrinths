@@ -6,23 +6,26 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 
-import sky.free.game.Gameplay.LevelMap;
+import sky.free.game.Gameplay.Level;
 
 public class LabyrinthGame extends Game {
 
-	SpriteBatch batchUI;
-	SpriteBatch batch;
+	public SpriteBatch batchUI;
+	public SpriteBatch batch;
+	public LevelDatabase lDB;
 	BitmapFont font;
 	Music maintheme;
-	Array<LevelMap> allLevels;
+
+	//Array<Level> allLevels;
 
 
-	public LabyrinthGame(Array<LevelMap> aL){
-		allLevels = aL;
+	public LabyrinthGame(){//Array<Level> aL){
+		//allLevels = aL;
 	}
 	
 	@Override
 	public void create () {
+		lDB = new LevelDatabase();
 		batchUI = new SpriteBatch();
 		batch = new SpriteBatch();
 		font = new BitmapFont();

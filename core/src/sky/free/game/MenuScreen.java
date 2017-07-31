@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
+import sky.free.game.LevelEditor.NewLevelOptionsScreen;
 
 
 /**
@@ -17,6 +18,8 @@ import com.badlogic.gdx.math.Rectangle;
  */
 
 public  class MenuScreen implements Screen, InputProcessor  {
+
+    final boolean developerModeOn = true;  //TODO отключить в релизной версии
 
     float deltaMove;
 
@@ -36,6 +39,7 @@ public  class MenuScreen implements Screen, InputProcessor  {
     private Button buttonPlay;
     private Button buttonExit;
     private Button buttonMusic;
+    private Button buttonEditor;
 
 
     public MenuScreen(final LabyrinthGame game){
@@ -97,6 +101,9 @@ public  class MenuScreen implements Screen, InputProcessor  {
         gam.batchUI.draw(buttonPlay.currentTexture,buttonPlay.checkZone.x, buttonPlay.checkZone.y, buttonPlay.checkZone.getWidth(), buttonPlay.checkZone.getHeight());
         gam.batchUI.draw(buttonExit.currentTexture, buttonExit.checkZone.x, buttonExit.checkZone.y, buttonExit.checkZone.getWidth(), buttonExit.checkZone.getHeight());
         gam.batchUI.draw(buttonMusic.currentTexture, buttonMusic.checkZone.x, buttonMusic.checkZone.y, buttonMusic.checkZone.getWidth(), buttonMusic.checkZone.getHeight());
+
+        if (developerModeOn)
+            gam.batchUI.draw(buttonEditor.currentTexture,buttonEditor.checkZone.x, buttonEditor.checkZone.y, buttonEditor.checkZone.getWidth(), buttonEditor.checkZone.getHeight());
     }
 
     private  void drawButtonComing(){
@@ -164,6 +171,9 @@ public  class MenuScreen implements Screen, InputProcessor  {
         else if (buttonMusic.checkZone.contains((float)screenX,(float)scrH- screenY)){
             buttonMusic.makeAction();
 
+        }else if (buttonEditor.checkZone.contains((float)screenX,(float)scrH- screenY) && developerModeOn){
+            buttonEditor.makeAction();
+
         }
 
 
@@ -182,6 +192,7 @@ public  class MenuScreen implements Screen, InputProcessor  {
         Rectangle r1 = new Rectangle(width,height/2,width/4,height/6);
         Rectangle r2 = new Rectangle(width,height/2-height/6-10,width/4,height/6);
         Rectangle r3 = new Rectangle(-1*height/9,height/9*8-10,height/9,height/9);
+        Rectangle r4 = new Rectangle(0,0,width/5,height/3);
 
         Texture bP = new Texture("main_menu_bp/button_play.png");
         Texture bPPressed = new Texture("main_menu_bp/button_play_pressed.png");
@@ -229,6 +240,15 @@ public  class MenuScreen implements Screen, InputProcessor  {
                     gam.maintheme.play();
                     this.isActivated = false;
                 }
+            }
+        };
+
+        Texture bEd = new Texture("col.png");
+        buttonEditor = new Button(r4,bEd,bEd) {
+            @Override
+            public void makeAction() {
+                super.makeAction();
+                gam.setScreen(new NewLevelOptionsScreen(gam));
             }
         };
 
